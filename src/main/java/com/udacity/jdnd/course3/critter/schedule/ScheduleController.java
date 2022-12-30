@@ -18,8 +18,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/schedule")
 public class ScheduleController {
 
+    private ScheduleService scheduleService;
+
     @Autowired
-    ScheduleService scheduleService;
+    public ScheduleController(ScheduleService scheduleService) {
+        this.scheduleService = scheduleService;
+    }
 
     @PostMapping
     public ScheduleDTO createSchedule(@RequestBody ScheduleDTO scheduleDTO) {
@@ -31,7 +35,7 @@ public class ScheduleController {
     public List<ScheduleDTO> getAllSchedules() {
         List<Schedule> scheduleList = scheduleService.getAll();
         return scheduleList.stream()
-                .map(s -> convertSchedule2ScheduleDTO(s))
+                .map(this::convertSchedule2ScheduleDTO)
                 .collect(Collectors.toList());
     }
 
@@ -39,7 +43,7 @@ public class ScheduleController {
     public List<ScheduleDTO> getScheduleForPet(@PathVariable long petId) {
         List<Schedule> scheduleList = scheduleService.getScheduleByPetId(petId);
         return scheduleList.stream()
-                .map(s -> convertSchedule2ScheduleDTO(s))
+                .map(this::convertSchedule2ScheduleDTO)
                 .collect(Collectors.toList());
     }
 
@@ -47,7 +51,7 @@ public class ScheduleController {
     public List<ScheduleDTO> getScheduleForEmployee(@PathVariable long employeeId) {
         List<Schedule> scheduleList = scheduleService.getScheduleByEmployeeId(employeeId);
         return scheduleList.stream()
-                .map(s -> convertSchedule2ScheduleDTO(s))
+                .map(this::convertSchedule2ScheduleDTO)
                 .collect(Collectors.toList());
     }
 
@@ -55,7 +59,7 @@ public class ScheduleController {
     public List<ScheduleDTO> getScheduleForCustomer(@PathVariable long customerId) {
         List<Schedule> scheduleList = scheduleService.getScheduleByCustomerId(customerId);
         return scheduleList.stream()
-                .map(s -> convertSchedule2ScheduleDTO(s))
+                .map(this::convertSchedule2ScheduleDTO)
                 .collect(Collectors.toList());
     }
 

@@ -16,8 +16,12 @@ import java.util.stream.Collectors;
 @RequestMapping("/pet")
 public class PetController {
 
+    private PetService petService;
+
     @Autowired
-    PetService petService;
+    public PetController(PetService petService) {
+        this.petService = petService;
+    }
 
     @PostMapping
     public PetDTO savePet(@RequestBody PetDTO petDTO) {
@@ -35,7 +39,7 @@ public class PetController {
     public List<PetDTO> getPets() {
         List<Pet> petList = petService.getAll();
         return petList.stream()
-                .map(p -> convertPet2PetDTO(p))
+                .map(this::convertPet2PetDTO)
                 .collect(Collectors.toList());
     }
 
@@ -43,7 +47,7 @@ public class PetController {
     public List<PetDTO> getPetsByOwner(@PathVariable long ownerId) {
         List<Pet> petList = petService.getByOwner(ownerId);
         return petList.stream()
-                .map(p -> convertPet2PetDTO(p))
+                .map(this::convertPet2PetDTO)
                 .collect(Collectors.toList());
     }
 

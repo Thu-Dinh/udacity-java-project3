@@ -22,11 +22,15 @@ import java.util.stream.Collectors;
 @RequestMapping("/user")
 public class UserController {
 
-    @Autowired
-    CustomerService customerService;
+    private CustomerService customerService;
+
+    private EmployeeService employeeService;
 
     @Autowired
-    EmployeeService employeeService;
+    public UserController(CustomerService customerService, EmployeeService employeeService) {
+        this.customerService = customerService;
+        this.employeeService = employeeService;
+    }
 
     @PostMapping("/customer")
     public CustomerDTO saveCustomer(@RequestBody CustomerDTO customerDTO) {
@@ -38,7 +42,7 @@ public class UserController {
     public List<CustomerDTO> getAllCustomers() {
         List<Customer> customerList = customerService.getAll();
         return customerList.stream()
-                .map(c -> convertCustomer2CustomerDTO(c))
+                .map(this::convertCustomer2CustomerDTO)
                 .collect(Collectors.toList());
     }
 
@@ -68,7 +72,7 @@ public class UserController {
     public List<EmployeeDTO> findEmployeesForService(@RequestBody EmployeeRequestDTO employeeDTO) {
         List<Employee> employeeList = employeeService.getAvailableEmployeeBySkillAndDate(employeeDTO.getSkills(), employeeDTO.getDate());
         return employeeList.stream()
-                .map(e -> convertEmployee2EmployeeDTO(e))
+                .map(this::convertEmployee2EmployeeDTO)
                 .collect(Collectors.toList());
 
     }
